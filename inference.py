@@ -74,7 +74,7 @@ if __name__ == '__main__':
     n = 100 # observations per sample
 
     # View sampling distribution - needs additional info entered in function
-    vis_distribution(p, n)
+    #vis_distribution(p, n)
 
     # Determine if CTL holds
     if test_CTL(n, p):
@@ -85,5 +85,5 @@ if __name__ == '__main__':
     print("standard error:", se)
 
     # Determine confidence interval
-    lower, upper = calc_ci_range(n, p, se, 90)
+    lower, upper = calc_ci_range(n, p, se, 95)
     print("95% confidence interval: {} - {}".format(round(lower, 3), round(upper, 3)))
