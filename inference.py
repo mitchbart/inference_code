@@ -52,7 +52,7 @@ def calc_ci_range(n, p, se=0, ci=95):
 
 
 # Function to test if CTL holds
-def test_CTL(n, p):
+def test_CLT(n, p):
     # Sample is considered sufficiently large when np>=10 and n(1-p)>=10
     np = n * p
     n_one_minus_p = (1 - p) * n
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     #vis_distribution(p, n)
 
     # Determine if CTL holds
-    if test_CTL(n, p):
+    if test_CLT(n, p):
         print("mean:", p)
 
     # Determine standard error
