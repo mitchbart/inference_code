@@ -16,8 +16,15 @@ def build_sampling_distribution(population, n_observations, n_times):
 
 
 # Function to visualise sampling distribution
-def vis_distribution(distribution):
-    plt.hist(distribution, bins=40, edgecolor='black')
+def vis_distribution(p, n):
+    pop_size = 40000  # population size - fill in
+    n_samples = 1000  # number of times to repeat testing - fill in
+    count_y = int(pop_size * p)  # calc % p
+    count_n = pop_size - count_y  # calc % not p
+    pop_list = [1] * count_y + [0] * count_n  # create a list representative of population
+    sampling_dist = build_sampling_distribution(pop_list, n, n_samples)
+
+    plt.hist(sampling_dist, bins=24, edgecolor='black')
     plt.title('Histogram of Entries')
     plt.xlabel('Entry Type')
     plt.ylabel('Frequency')
@@ -30,15 +37,18 @@ def calc_standard_error(n, p):
     return se
 
 
-def calc_95ci(n, p, ci=95):
-    se = calc_standard_error(n, p)
+def calc_ci_range(n, p, se=0, ci=95):
+    # Calculated standard error if not provided
+    if se == 0:
+        se = calc_standard_error(n, p)
+    # Determine confidence interval value
     if ci == 90:
-        calc_ci = 1.6449 * se
+        ci_val = 1.6449 * se
     elif ci == 99:
-        calc_ci = 2.58 * se
+        ci_val = 2.58 * se
     else:  # 95% confidence interval
-        calc_ci = 1.96 * se
-    return p - calc_ci, p + calc_ci
+        ci_val = 1.96 * se
+    return p - ci_val, p + ci_val
 
 
 # Function to test if CTL holds
@@ -60,23 +70,20 @@ def test_CTL(n, p):
 
 
 if __name__ == '__main__':
-    p = 0.82  # actual p of population
-    n = 1042  # observations per sample
+    p = 0.16  # p hat or p for following calculations
+    n = 100 # observations per sample
 
-    # Required to visualise distribution - uncomment all below and fill in required values
-    # pop_size = 20000000  # population size - fill in
-    # n_samples = 1000  # number of times to repeat testing - fill in
-    # count_y = int(pop_size * p)  # calc % p
-    # count_n = pop_size - count_y  # calc % not p
-    # pop_list = [1] * count_y + [0] * count_n  # create a list representative of population
-    # sampling_dist = build_sampling_distribution(pop_list, n, n_samples)
-    # vis_distribution(sampling_dist)
+    # View sampling distribution - needs additional info entered in function
+    vis_distribution(p, n)
 
-    # Determine if CTL holds  and print standard error
+    # Determine if CTL holds
     if test_CTL(n, p):
         print("mean:", p)
 
-    print("standard error:", round(calc_standard_error(n, p), 3))
+    # Determine standard error
+    se = round(calc_standard_error(n, p), 3)
+    print("standard error:", se)
 
-    lower, upper = calc_95ci(n, p)
+    # Determine confidence interval
+    lower, upper = calc_ci_range(n, p, se, 90)
     print("95% confidence interval: {} - {}".format(round(lower, 3), round(upper, 3)))
